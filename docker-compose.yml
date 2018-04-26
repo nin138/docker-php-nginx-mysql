@@ -1,0 +1,31 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: ./docker/nginx/
+    ports:
+      - "80:80"
+    links:
+      - php
+
+  php:
+    build:
+      context: ./docker/php
+    ports:
+      - "127.0.0.1:9000:9000"
+    volumes:
+      - ./www:/usr/share/nginx/html
+    env_file:
+      - ./docker/.env
+    depends_on:
+      - mysql
+
+  mysql:
+    build:
+      context: ./docker/mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    env_file:
+      - ./docker/.env
+    volumes:
+      - ./misc/data:/var/lib/mysql
